@@ -114,6 +114,8 @@ def transfer_paths(paths, creds, upstream=True, tries=3,
             if isinstance(path, list):
                 path = path[0]
             creds.key = os.path.expanduser(path)
+        if 'port' not in creds:
+            creds.port = '22'
     else:
         raise Exception('You must provide the credentials.')
 
@@ -127,7 +129,7 @@ def transfer_paths(paths, creds, upstream=True, tries=3,
     rsync = "rsync {} -e 'ssh"\
             " -o StrictHostKeyChecking=no"\
             " -o ServerAliveInterval=100"\
-            " -i {}'".format(additional_params, creds.key)
+            " -i {} -P {}'".format(additional_params, creds.key, creds.port)
 
     cmds = []
     for src, dst in paths:
